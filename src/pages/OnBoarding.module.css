@@ -1,0 +1,75 @@
+.onboarding {
+  border-top: 1px solid rgb(213, 213, 213);
+}
+
+.onboarding form {
+  display: flex;
+  justify-content: center;
+}
+
+.onboarding form label {
+  margin: 10px 0;
+}
+
+.onboarding section {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 35%;
+  text-align: start;
+}
+
+.onboarding input {
+  padding: 15px 30px;
+  margin: 10px 0;
+  font-size: 15px;
+  border: 2px solid rgb(219, 219, 219);
+  border-radius: 10px;
+}
+
+.onboarding input::-webkit-outer-spin-button,
+.onboarding input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.onboarding .multipleInputContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.onboarding .multipleInputContainer input {
+  margin-right: 10px;
+}
+
+.onboarding .multipleInputContainer label {
+  padding: 10px;
+  border: 2px solid rgb(144, 144, 144);
+  border-radius: 10px;
+  transition: all 0.3s;
+  margin-right: 10px;
+}
+
+.onboarding .multipleInputContainer input[type="radio"] {
+  display: none;
+}
+
+.onboarding .multipleInputContainer input[type="number"] {
+  width: 10%;
+}
+
+.onboarding form input[type="radio"]:checked + label {
+  border: 2px solid rgb(221, 39, 22);
+}
+
+.onboarding form input[type="submit"]:hover {
+  background-color: rgb(255, 255, 255);
+}
+
+.onboarding form input[type="submit"]:active {
+  background-color: rgb(226, 115, 115);
+}
+
+.onboarding form img {
+  width: 100%;
+}

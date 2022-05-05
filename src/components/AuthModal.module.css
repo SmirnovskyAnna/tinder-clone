@@ -16,14 +16,16 @@
   float: right;
 }
 
-form {
+.authModal form {
   display: flex;
   flex-direction: column;
 }
 
-input[type=password],
-input[type=email] {
+.authModal input[type="password"],
+input[type="email"] {
   padding: 8px;
   margin: 8px;
   font-size: 17px;
 }
+
+
