@@ -10,7 +10,7 @@ nav {
 }
 
 .logo {
-  width: 100%
+  width: 100%;
 }
 
 .navButton {
@@ -21,4 +21,9 @@ nav {
   border-radius: 10px;
   border: none;
   margin: 10px;
+}
+
+.navButton:disabled {
+  background-color: rgb(189, 180, 180);
+  color: rgb(160, 40, 80);
 }
