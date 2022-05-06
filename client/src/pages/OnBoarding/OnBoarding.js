@@ -1,5 +1,5 @@
 import * as React from "react";
-import Nav from "../components/Nav";
+import Nav from "../../components/Nav/Nav";
 import styles from "./OnBoarding.module.css";
 
 const OnBoarding = () => {

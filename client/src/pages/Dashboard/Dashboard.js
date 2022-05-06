@@ -1,6 +1,6 @@
 import * as React from "react";
 import TinderCard from "react-tinder-card";
-import ChatContainer from "../components/ChatContainer";
+import ChatContainer from "../../components/ChatContainer/ChatContainer";
 import styles from "./Dashboard.module.css";
 
 const characters = [

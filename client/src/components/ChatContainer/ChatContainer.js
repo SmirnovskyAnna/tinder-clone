@@ -1,7 +1,7 @@
 import styles from "./ChatContainer.module.css";
-import ChatDisplay from "./ChatDisplay";
-import ChatHeader from "./ChatHeader";
-import MatchesDisplay from "./MatchesDisplay";
+import ChatDisplay from "../ChatDisplay";
+import ChatHeader from "../ChatHeader/ChatHeader";
+import MatchesDisplay from "../MatchesDisplay/MatchesDisplay";
 
 const ChatContainer = () => {
   return (

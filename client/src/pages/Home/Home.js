@@ -1,6 +1,6 @@
 import * as React from "react";
-import AuthModal from "../components/AuthModal";
-import Nav from "../components/Nav";
+import AuthModal from "../../components/AuthModal/AuthModal";
+import Nav from "../../components/Nav/Nav";
 import styles from "./Home.module.css";
 
 const Home = () => {
