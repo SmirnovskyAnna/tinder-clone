@@ -28,7 +28,6 @@ app.post("/signup", async (req, res) => {
     await client.connect();
     const database = client.db("app-data");
     const users = database.collection("users");
-
     const exsistingUser = await users.findOne({ email });
 
     if (exsistingUser) {
