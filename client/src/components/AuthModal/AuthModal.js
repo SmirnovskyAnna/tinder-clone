@@ -9,7 +9,7 @@ const AuthModal = ({ setShowModal, isSignUp }) => {
   const [password, setPassword] = React.useState(null);
   const [confirmPassword, setConfirmPassword] = React.useState(null);
   const [error, setError] = React.useState(null);
-  const [cookie, setCookie, removeCookie] = useCookies(["user"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   let navigate = useNavigate();
 
@@ -35,9 +35,8 @@ const AuthModal = ({ setShowModal, isSignUp }) => {
         }
       );
 
-      setCookie("Email", response.data.email);
-      setCookie("UserId", response.data.userId);
       setCookie("AuthToken", response.data.token);
+      setCookie("UserId", response.data.userId);
 
       const success = response.status == 201;
 
