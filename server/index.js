@@ -13,10 +13,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Default
 app.get("/", (req, res) => {
   res.json("Hello to my app!");
 });
 
+// Sign up to the Database
 app.post("/signup", async (req, res) => {
   const client = new MongoClient(uri);
   const { email, password } = req.body;
@@ -27,11 +29,10 @@ app.post("/signup", async (req, res) => {
   try {
     await client.connect();
     const database = client.db("app-data");
-    const users = database.collection("users");
-    const exsistingUser = await users.findOne({ email });
+    const users = database.collection("users");const existingUser = await users.findOne({ email });
 
-    if (exsistingUser) {
-      return res.status(409).send("User already exsists. Please login.");
+    if (existingUser) {
+      return res.status(409).send("User already exists. Please login");
     }
 
     const sanitizedEmail = email.toLowerCase();
@@ -41,6 +42,7 @@ app.post("/signup", async (req, res) => {
       email: sanitizedEmail,
       hashed_password: hashedPassword,
     };
+
     const insertedUser = await users.insertOne(data);
 
     const token = jwt.sign(insertedUser, sanitizedEmail, {
@@ -55,6 +57,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// Log in to the Database
 app.post("/login", async (req, res) => {
   const client = new MongoClient(uri);
   const { email, password } = req.body;
@@ -77,12 +80,82 @@ app.post("/login", async (req, res) => {
       });
       res.status(201).json({ token, userId: user.user_id });
     }
-    res.status(400).send("Invalid Credentials");
+    res.status(400).json("Invalid Credentials");
   } catch (err) {
     console.log(err);
+  } finally {
+    await client.close();
   }
 });
 
+// Get individual user
+app.get("/user", async (req, res) => {
+  const client = new MongoClient(uri);
+  const userId = req.query.userId;
+
+  try {
+    await client.connect();
+    const database = client.db("app-data");
+    const users = database.collection("users");
+
+    const query = { user_id: userId };
+    const user = await users.findOne(query);
+    res.send(user);
+  } finally {
+    await client.close();
+  }
+});
+
+// Update User with a match
+app.put("/addmatch", async (req, res) => {
+  const client = new MongoClient(uri);
+  const { userId, matchedUserId } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db("app-data");
+    const users = database.collection("users");
+
+    const query = { user_id: userId };
+    const updateDocument = {
+      $push: { matches: { user_id: matchedUserId } },
+    };
+    const user = await users.updateOne(query, updateDocument);
+    res.send(user);
+  } finally {
+    await client.close();
+  }
+});
+
+// Get all Users by userIds in the Database
+app.get("/users", async (req, res) => {
+  const client = new MongoClient(uri);
+  const userIds = JSON.parse(req.query.userIds);
+
+  try {
+    await client.connect();
+    const database = client.db("app-data");
+    const users = database.collection("users");
+
+    const pipeline = [
+      {
+        $match: {
+          user_id: {
+            $in: userIds,
+          },
+        },
+      },
+    ];
+
+    const foundUsers = await users.aggregate(pipeline).toArray();
+
+    res.json(foundUsers);
+  } finally {
+    await client.close();
+  }
+});
+
+// Get all the Gendered Users in the Database
 app.get("/gendered-users", async (req, res) => {
   const client = new MongoClient(uri);
   const gender = req.query.gender;
@@ -99,6 +172,7 @@ app.get("/gendered-users", async (req, res) => {
   }
 });
 
+// Update a User in the Database
 app.put("/user", async (req, res) => {
   const client = new MongoClient(uri);
   const formData = req.body.formData;
@@ -133,70 +207,7 @@ app.put("/user", async (req, res) => {
   }
 });
 
-app.get("/user", async (req, res) => {
-  const client = new MongoClient(uri);
-  const userId = req.query.userId;
-
-  try {
-    await client.connect();
-    const database = client.db("app-data");
-    const users = database.collection("users");
-
-    const query = { user_id: userId };
-    const user = await users.findOne(query);
-    res.send(user);
-  } finally {
-    await client.close();
-  }
-});
-
-app.put("/addmatch", async (req, res) => {
-  const client = new MongoClient(uri);
-  const { userId, matchedUserId } = req.body;
-
-  try {
-    await client.connect();
-    const database = client.db("app-data");
-    const users = database.collection("users");
-
-    const query = { user_id: userId };
-    const updateDocument = {
-      $push: { matches: { user_id: matchedUserId } },
-    };
-    const user = await users.updateOne(query, updateDocument);
-    res.send(user);
-  } finally {
-    await client.close();
-  }
-});
-
-app.get("/users", async (req, res) => {
-  const client = new MongoClient(uri);
-  const userIds = JSON.parse(req.query.userIds);
-
-  try {
-    await client.connect();
-    const database = client.db("app-data");
-    const users = database.collection("users");
-
-    const pipeline = [
-      {
-        $match: {
-          user_id: {
-            $in: userIds,
-          },
-        },
-      },
-    ];
-
-    const foundUsers = await users.aggregate(pipeline).toArray();
-
-    res.json(foundUsers);
-  } finally {
-    await client.close();
-  }
-});
-
+// Get Messages by from_userId and to_userId
 app.get("/messages", async (req, res) => {
   const { userId, correspondingUserId } = req.query;
   const client = new MongoClient(uri);
@@ -217,4 +228,21 @@ app.get("/messages", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on PORT - ${PORT}`));
+// Add a Message to our Database
+app.post("/message", async (req, res) => {
+  const client = new MongoClient(uri);
+  const message = req.body.message;
+
+  try {
+    await client.connect();
+    const database = client.db("app-data");
+    const messages = database.collection("messages");
+
+    const insertedMessage = await messages.insertOne(message);
+    res.send(insertedMessage);
+  } finally {
+    await client.close();
+  }
+});
+
+app.listen(PORT, () => console.log(`server running on PORT - ${PORT}`));

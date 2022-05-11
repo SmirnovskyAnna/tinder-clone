@@ -1,11 +1,14 @@
 import * as React from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
 import styles from "./MatchesDisplay.module.css";
 
 const MatchesDisplay = ({ matches, setClickedUser }) => {
   const [matchedProfiles, setMatchedProfiles] = React.useState(null);
+  const [cookies, setCookie, removeCookie] = useCookies(null);
 
   const matchedUserIds = matches.map(({ user_id }) => user_id);
+  const userId = cookies.UserId;
 
   const getMatches = async () => {
     try {
@@ -22,10 +25,20 @@ const MatchesDisplay = ({ matches, setClickedUser }) => {
     getMatches();
   }, [matches]);
 
+  const filteredMatchedProfiles = matchedProfiles?.filter(
+    (matchedProfile) =>
+      matchedProfile.matches.filter((profile) => profile.user_id == userId)
+        .length > 0
+  );
+
   return (
     <div className={styles.matchesDisplay}>
-      {matchedProfiles?.map((match, _index) => (
-        <div key={_index} className={styles.matchCard} onClick={setClickedUser(match)}>
+      {filteredMatchedProfiles?.map((match, _index) => (
+        <div
+          key={_index}
+          className={styles.matchCard}
+          onClick={() => setClickedUser(match)}
+        >
           <div className={styles.imgContainer}>
             <img src={match?.url} alt={match?.first_name + " profile"} />
           </div>

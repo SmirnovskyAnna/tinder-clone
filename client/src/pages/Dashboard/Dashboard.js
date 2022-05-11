@@ -37,8 +37,13 @@ const Dashboard = () => {
 
   React.useEffect(() => {
     getUser();
-    getGenderedUsers();
-  }, [user, genderedUsers]);
+  }, []);
+
+  React.useEffect(() => {
+    if (user) {
+      getGenderedUsers();
+    }
+  }, [user]);
 
   const updateMatches = async (matchedUserId) => {
     try {
@@ -71,6 +76,7 @@ const Dashboard = () => {
     (genderedUser) => !matchedUserIds.includes(genderedUser.user_id)
   );
 
+  console.log("filteredGenderedUsers ", filteredGenderedUsers);
   return (
     <>
       {user && (
@@ -86,7 +92,7 @@ const Dashboard = () => {
                   onCardLeftScreen={() => outOfFrame(genderedUser.first_name)}
                 >
                   <div
-                    style={{ backgroundImage: `url(${genderedUser.url})` }}
+                    style={{ backgroundImage: "url(" + genderedUser.url + ")" }}
                     className={styles.card}
                   >
                     <h3>{genderedUser.first_name}</h3>
