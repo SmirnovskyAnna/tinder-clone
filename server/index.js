@@ -5,9 +5,10 @@ const { MongoClient } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
+require('dotenv').config()
 
 const uri =
-  "mongodb+srv://masav1997:Sa312520@cluster0.gljit.mongodb.net/Cluster0?retryWrites=true&w=majority";
+  process.env.URI;
 
 const app = express();
 app.use(cors());
