@@ -6,7 +6,7 @@ import Nav from "../../components/Nav/Nav";
 import styles from "./OnBoarding.module.css";
 
 const OnBoarding = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  const [cookies, setCookie, removeCookie] = useCookies(null);
   const [formData, setFormData] = React.useState({
     user_id: cookies.UserId,
     first_name: "",
@@ -50,7 +50,6 @@ const OnBoarding = () => {
     }));
   };
 
-  console.log(formData);
   return (
     <>
       <Nav minimal={true} setShowModal={() => {}} showModal={false} />

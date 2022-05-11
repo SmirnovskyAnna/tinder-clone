@@ -6,8 +6,7 @@ import MatchesDisplay from "../MatchesDisplay/MatchesDisplay";
 
 const ChatContainer = ({ user }) => {
   const [clickedUser, setClickedUser] = React.useState(null);
-
-  console.log("clickUser", clickedUser);
+  
   return (
     <div className={styles.chatContainer}>
       <ChatHeader user={user} />
